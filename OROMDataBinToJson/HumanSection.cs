@@ -50,15 +50,17 @@ namespace OROMDataBinToJson
             stream.Seek(-1, SeekOrigin.Current);
             
             var nameLength = stream.ReadByte();
-            stream.Read(buffer, 0, nameLength);
-            var name = nameLength <= 0 ? "" : Encoding.ASCII.GetString(buffer, 0, nameLength);
-            
+            var name = "";
+            if (nameLength > 0)
+            {
+                stream.Read(buffer, 0, nameLength);
+                name = Encoding.ASCII.GetString(buffer, 0, nameLength);
+            }
             
             var lookAheadByte = stream.ReadByte();
             while (lookAheadByte == 00)
                 lookAheadByte = stream.ReadByte();
             stream.Seek(-1, SeekOrigin.Current);
-
 
             HumanRec rec;
             stream.Seek(DATA_HEAD_OFFSET, SeekOrigin.Current);
@@ -115,11 +117,9 @@ namespace OROMDataBinToJson
         
         public HumanSection(Stream stream, byte[] buffer)
         {
-            stream.Read(buffer, 0, HEADER_SIZE);
             Header = new byte[HEADER_SIZE];
-            for (var i = 0; i < HEADER_SIZE; ++i)
-                Header[i] = buffer[i];
-
+            stream.Read(Header, 0, HEADER_SIZE);
+            
             stream.Seek(4, SeekOrigin.Current);
             const int entryCount = 0xD2;
             

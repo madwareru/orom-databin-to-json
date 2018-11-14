@@ -28,26 +28,32 @@ namespace OROMDataBinToJson
             public int Mind;              public int Spirit;            
             public int HealthMax;         public int HPRegeneration;    
             public int ManaMax;           public int MPRegeneration;    
+            
             public int Speed;             public int RotationSpeed;     
             public int ScanRange;         public int PhysicalMin;       
             public int PhysicalMax;       public int AttackKind;        
             public int ToHit;             public int Defence;           
+            
             public int Absorption;        public int AttackChargeTime;
             public int AttackRelaxTime;   public int ProtectFire;       
             public int ProtectWater;      public int ProtectAir;        
             public int ProtectEarth;      public int ProtectAstral;     
+            
             public int ResistBlade;       public int ResistAxe;         
             public int ResistBludgeon;    public int ResistPike;        
             public int ResistShooting;    public int TypeID;            
             public int Face;              public int TokenSize;         
+            
             public int MovementType;      public int DyingTime;         
             public int Withdraw;          public int Wimpy;             
             public int Seeinvisible;      public int XPvalue;           
             public int Treasure1Gold;     public int TreasureMin1;      
+            
             public int TreasureMax1;      public int Treasure2Item;     
             public int TreasureMin2;      public int TreasureMax2;      
             public int Treasure3Magic;    public int TreasureMin3;      
             public int TreasureMax3;      public int Power;             
+            
             public int Spell1;            public int Probability1;      
             public int Spell2;            public int Probability2;      
             public int Spell3;            public int Probability3;

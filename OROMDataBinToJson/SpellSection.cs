@@ -76,6 +76,7 @@ namespace OROMDataBinToJson
             entryCount += stream.ReadByte() * 0x100;
             entryCount += stream.ReadByte() * 0x10000;
             entryCount += stream.ReadByte() * 0x1000000;
+            --entryCount;
             
             SpellDefinitions = new SpellDef[entryCount];
             

@@ -23,9 +23,9 @@ namespace OROMDataBinToJson
         public struct StructureRec
         {
             public int SizeX;        public int SizeY; 
-            public int ScanRange;    public int HealthMax; 
+            public int ScanRange;    public short HealthMax; 
             public byte Passability; public byte BuildingPresent;
-            public int StartID;      public int Tiles;
+            public int StartID;      public short Tiles;
         }
         
         private static unsafe StructureDef LoadStructureDef(Stream stream, byte[] buffer)
