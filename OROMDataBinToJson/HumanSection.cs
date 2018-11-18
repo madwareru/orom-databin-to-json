@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,7 +43,7 @@ namespace OROMDataBinToJson
             public int ServerId;        public int KnownSpells;
         }
         
-        private static unsafe HumanDef LoadHumanDef(Stream stream, byte[] buffer)
+        private static unsafe HumanDef LoadHumanDef(Stream stream, byte[] buffer, HashSet<string> itemNamesHashSet)
         {
             var checkerByte = stream.ReadByte();
             while (checkerByte == 00)
@@ -83,8 +84,11 @@ namespace OROMDataBinToJson
                     stream.Seek(-infoLength - 1, SeekOrigin.Current);
                     break;
                 }
-                
-                itemsWearing[texInfoId] = Encoding.ASCII.GetString(buffer, 0, infoLength);
+
+                var itemName = Encoding.ASCII.GetString(buffer, 0, infoLength);
+                itemsWearing[texInfoId] = itemName;
+                if (!itemNamesHashSet.Contains(itemName))
+                    itemNamesHashSet.Add(itemName);
 
                 lookAheadByte = stream.ReadByte();
                 if (lookAheadByte != 0)
@@ -115,7 +119,7 @@ namespace OROMDataBinToJson
             };
         }
         
-        public HumanSection(Stream stream, byte[] buffer)
+        public HumanSection(Stream stream, byte[] buffer, HashSet<string> itemNamesHashSet)
         {
             Header = new byte[HEADER_SIZE];
             stream.Read(Header, 0, HEADER_SIZE);
@@ -126,7 +130,7 @@ namespace OROMDataBinToJson
             HumanDefinitions = new HumanDef[entryCount];
             
             for (var i = 0; i < entryCount; ++i)
-                HumanDefinitions[i] = LoadHumanDef(stream, buffer);
+                HumanDefinitions[i] = LoadHumanDef(stream, buffer, itemNamesHashSet);
 
             while (stream.LookAhead() == 00)
                 stream.ReadByte();

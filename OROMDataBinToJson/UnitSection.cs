@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -60,7 +61,7 @@ namespace OROMDataBinToJson
             public int SpellPower;
         }
         
-        private static unsafe UnitDef LoadUnitDef(Stream stream, byte[] buffer)
+        private static unsafe UnitDef LoadUnitDef(Stream stream, byte[] buffer, HashSet<string> itemNames)
         {
             var checkerByte = stream.ReadByte();
             while (checkerByte == 00)
@@ -87,15 +88,18 @@ namespace OROMDataBinToJson
                 return new UnitDef {Name = name, Record = rec, TextualInfo = ""};
             
             stream.Read(buffer, 0, infoLength);
+            var itemName = Encoding.ASCII.GetString(buffer, 0, infoLength);
+            if (!itemNames.Contains(itemName))
+                itemNames.Add(itemName);
             return new UnitDef
             {
                 Name = name,
                 Record = rec, 
-                TextualInfo = Encoding.ASCII.GetString(buffer, 0, infoLength)
+                TextualInfo = itemName
             };
         }
         
-        public UnitSection(Stream stream, byte[] buffer)
+        public UnitSection(Stream stream, byte[] buffer, HashSet<string> itemNames)
         {
             stream.Read(buffer, 0, HEADER_SIZE);
             Header = new byte[HEADER_SIZE];
@@ -108,7 +112,7 @@ namespace OROMDataBinToJson
             UnitDefinitions = new UnitDef[entryCount];
             
             for (var i = 0; i < entryCount; ++i)
-                UnitDefinitions[i] = LoadUnitDef(stream, buffer);
+                UnitDefinitions[i] = LoadUnitDef(stream, buffer, itemNames);
 
             while (stream.LookAhead() == 00)
                 stream.ReadByte();

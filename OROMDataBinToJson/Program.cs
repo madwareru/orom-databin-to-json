@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -39,7 +40,12 @@ namespace OROMDataBinToJson
                         try
                         {
                             fileStream.Lock(0, fileStream.Length);
+                            var sw = new Stopwatch();
+                            sw.Start();
                             var dataScheme = new DataScheme(fileStream);
+                            sw.Stop();
+                            
+                            Console.WriteLine($"Parsing kept {sw.ElapsedMilliseconds} ms");
                             
                             if(File.Exists(outputFileName))
                                 File.Delete(outputFileName);
